@@ -39,38 +39,35 @@ class HtmlView extends BaseHtmlView {
      *
      * @throws Exception
      */
-    public function display($tpl = null) {
-        $app = Factory::getApplication();
-        $user = $app->getIdentity();
+ public function display($tpl = null) {
+    $app = Factory::getApplication();
+    $user = $app->getIdentity();
 
-        $this->state = $this->get('State');
-        $this->item = $this->get('Item');
-        $this->params = $app->getParams('com_ra_eventbooking');
-        $this->canSave = $this->get('CanSave');
-        $this->form = $this->get('Form');
+    $this->state = $this->get('State');
+    $this->item = $this->get('Item');
+    $this->params = $app->getParams('com_ra_eventbooking');
+    $this->canSave = $this->get('CanSave');
+    $this->form = $this->get('Form');
 
-        // Check for errors.
-        if (count($errors = $this->get('Errors'))) {
-            throw new \Exception(implode("\n", $errors));
-        }
-        // FIXED: Bind flat item params into 'params' group
-        if (!empty($this->item->params)) {
-            $registry = new \Joomla\Registry\Registry($this->item->params);
-
-            // Map ALL flat params into params group
-            $paramsData = [];
-            foreach ($registry->toArray() as $key => $value) {
-                $paramsData[$key] = $value;
-            }
-
-            $this->form->bind([
-                'params' => $paramsData  // Matches <fields name="params">
-            ]);
-            $this->_prepareDocument();
-
-            parent::display($tpl);
-        }
+    // Check for errors.
+    if (count($errors = $this->get('Errors'))) {
+        throw new \Exception(implode("\\n", $errors));
     }
+
+    // FIXED: Bind flat item params into 'params' group - ONLY for existing items
+    if (!empty($this->item) && !empty($this->item->params)) {
+        $registry = new \Joomla\Registry\Registry($this->item->params);
+        $paramsData = $registry->toArray();
+        
+        $this->form->bind([
+            'params' => $paramsData
+        ]);
+    }
+
+    $this->_prepareDocument();
+    parent::display($tpl);  
+}
+
 
     public function displayAI($tpl = null) {
         $model = $this->getModel();
@@ -103,7 +100,7 @@ class HtmlView extends BaseHtmlView {
     protected function _prepareDocument() {
         $app = Factory::getApplication();
         $menus = $app->getMenu();
-        $title = null;
+        //$title = null;
 
         // Because the application sets a default page title,
         // we need to get it from the menu item itself
