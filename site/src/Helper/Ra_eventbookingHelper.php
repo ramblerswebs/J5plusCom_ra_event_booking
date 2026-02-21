@@ -472,6 +472,9 @@ class evb {
     private function processParams($jsonparams) {
         $options = \Ramblers\Component\Ra_eventbooking\Site\Helper\Ra_eventbookingHelper::getRawGlobals();
         $params = \json_decode($jsonparams);
+        if ($params === null) {
+            $params = new \stdClass();
+        }
         foreach ($options as $key => $value) {
             $options->$key = $value;
             if (property_exists($params, $key)) {
@@ -598,7 +601,7 @@ class evb {
         $noOfPlaces = $this->noOfPlacesText();
         $signature = $this->options->signature;
         if ($signature === '') {
-            $signature = 'Regards<br/><br/>' . $this->options - booking_contact_name;
+            $signature = 'Regards<br/><br/>' . $this->options->booking_contact_name;
         }
 
         $search = ["{placesAvailable}", "{placesTaken}", "{totalPlacesAvailable}",
