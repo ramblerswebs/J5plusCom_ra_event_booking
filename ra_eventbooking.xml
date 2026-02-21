@@ -7,11 +7,9 @@
     <author>Chris Vaughan </author>
     <authorEmail>ruby.tuesday@ramblers-webs.org.uk</authorEmail>
     <authorUrl>http://ramblers-webs.org.uk</authorUrl>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <description>Enable booking of events on a group web site, walks and non walking events</description>
     <namespace path="src">Ramblers\Component\Ra_eventbooking</namespace>
-    
-    
     
     <install> <!-- Runs on install -->
         <sql>
@@ -75,7 +73,7 @@
     
 
     <updateservers>
-        <server type="extension" priority="1" name="com_ra_eventbooking">https://nocdn.component-creator.com/index.php?task=builder.preupdatecheckhook&amp;option=com_combuilder&amp;component=Njk1ODQtMjE0MDQ5</server>
+        <server type="extension" priority="1" name="Ramblers-webs Event Booking">https://raw.githubusercontent.com/ramblerswebs/updates/master/updates/com_ra_event_booking.xml</server>
     </updateservers>
 </extension>
 <!-- Component built by the Joomla Component Creator -->
