@@ -10,12 +10,12 @@
 
 namespace Ramblers\Component\Ra_eventbooking\Administrator\Field;
 
-
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die('Restricted access');
 
 use Joomla\CMS\Factory;
 use \Joomla\CMS\Form\FormField;
+use Joomla\Utilities\ArrayHelper;
 
 /**
  * Class SubmitField
@@ -24,19 +24,29 @@ use \Joomla\CMS\Form\FormField;
  */
 class BookingcontactField extends FormField {
 
-    protected $type = 'bookingcontact';
+    protected $type = 'Bookingcontact';
     protected $value;
     protected $for;
+    private $configMode = false;
 
     /**
      * Get a form field markup for the input
      *
      * @return string
      */
+    #[\Override]
     protected function getInput() {
+        $context = (string) $this->element['context'];  // "config"
+
+        if ($context === 'config') {
+            // Config.xml specific logic
+            $this->configMode = true;
+        }
         $options = $this->getOptions();
-        $html = '<select name="' . $this->name . '" value="' . $this->value . '" >';
-        $html .= '<option value="">Not specified [Use Group Booking Contact]</option>';
+        $html = '<select class="form-select" name="' . $this->name . '" value="' . $this->value . '" >';
+        if (!$this->configMode) {
+            $html .= '<option value="">Not specified [Use Group Booking Contact]</option>';
+        }
         foreach ($options as $option) {
             if ($this->value === $option->value) {
                 $html .= '<option value="' . $option->value . '" selected="selected">' . $option->text . '</option>';
@@ -48,6 +58,7 @@ class BookingcontactField extends FormField {
         return $html;
     }
 
+    #[\Override]
     protected function getLabel() {
         return parent::getLabel();
     }

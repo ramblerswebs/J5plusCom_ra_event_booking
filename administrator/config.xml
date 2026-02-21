@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<config addfieldprefix="Joomla\Component\Ra_eventbooking\Administrator\Field">
-    <fieldset label="COM_RA_EVENTBOOKING" name="ra_eventbooking" description="Basic configuration options"        >
+<config addfieldprefix="Ramblers\Component\Ra_eventbooking\Administrator\Field">
+    <fieldset label="Basic settings" name="ra_eventbooking" description="Basic configuration options" >
     
         <field name="total_places" 
                first="0" last="200" step="1" 
@@ -9,21 +9,6 @@
                label="Total number of Places" 
                description="Total or maximum number of places or zero if unlimited places" 
         />  
-        <field 
-            name="booking_contact_id" 
-            type="user" 
-            label="COM_RA_EVENTBOOKING_FORM_LBL_GROUP_CONTACT" 
-            description="COM_RA_EVENTBOOKING_FORM_DESC_GROUP_CONTACT" 
-        />
-           
-            
-        <field name="maxattendees" 
-               first="1" last="10" step="1" 
-               type="integer" 
-               label="COM_RA_EVENTBOOKING_FORM_LBL_MAXATTENDEES" 
-               description="COM_RA_EVENTBOOKING_FORM_DESC_MAXATTENDEES" 
-               hint="COM_RA_EVENTBOOKING_FORM_LBL_MAXATTENDEES"
-        />
         <field name="attendeetype" 
                type="list" 
                filter="raw"
@@ -43,6 +28,15 @@
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
+    </fieldset>
+    <fieldset label="User Access" name="user" description="User(logged on) Access">
+        <field name="maxattendees" 
+               first="1" last="10" step="1" 
+               type="integer" 
+               label="COM_RA_EVENTBOOKING_FORM_LBL_MAXATTENDEES" 
+               description="COM_RA_EVENTBOOKING_FORM_DESC_MAXATTENDEES" 
+               hint="COM_RA_EVENTBOOKING_FORM_LBL_MAXATTENDEES"
+        />
         <field name="userlistvisibletousers" 
                type="list" 
                label="COM_RA_EVENTBOOKING_FORM_LBL_USERLISTVISIBLETOUSERS" 
@@ -52,35 +46,6 @@
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
-        <field name="closingdate" 
-               type="list"        
-               label="COM_RA_EVENTBOOKING_FORM_LBL_USERLISTCLOSING"
-               description="COM_RA_EVENTBOOKING_FORM_DESC_USERLISTCLOSING">
-            <option value="6pm">6pm on the day before event</option>
-            <option value="24">24 hours prior to start</option>
-            <option value="start">When event starts</option>
-        </field>
-    </fieldset>
-    <fieldset label="Payments" name="ra_payments" description="Payments">
-        <field name="payment_required" 
-               type="list" 
-               label="COM_RA_EVENTBOOKING_FORM_LBL_EVENTSETTING_PAYMENT_REQUIRED" 
-               description="COM_RA_EVENTBOOKING_FORM_DESC_EVENTSETTING_PAYMENT_REQUIRED" 
-               hint="COM_RA_EVENTBOOKING_FORM_LBL_EVENTSETTING_PAYMENT_REQUIRED"
-        >
-            <option value="0">JNO</option>
-            <option value="1">JYES</option>
-        </field>
-        <field name="payment_details" 
-               showon="payment_required:1"
-               cols="50" 
-               rows="4" 
-               filter="safehtml" 
-               type="editor" 
-               label="COM_RA_EVENTBOOKING_FORM_LBL_EVENTSETTING_PAYMENT_DETAILS" 
-               description="COM_RA_EVENTBOOKING_FORM_DESC_EVENTSETTING_PAYMENT_DETAILS" 
-               hint="Description of what payment is required."
-        />
     </fieldset>
     <fieldset label="Guest Access" name="ra_eventbooking2" description="Non logged user access to booking">
         <field name="guest" 
@@ -125,9 +90,45 @@
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
-    
     </fieldset>
+    <fieldset label="Payments" name="ra_payments" description="Payments">
+        <field name="payment_required" 
+               type="list" 
+               label="COM_RA_EVENTBOOKING_FORM_LBL_EVENTSETTING_PAYMENT_REQUIRED" 
+               description="COM_RA_EVENTBOOKING_FORM_DESC_EVENTSETTING_PAYMENT_REQUIRED" 
+               hint="COM_RA_EVENTBOOKING_FORM_LBL_EVENTSETTING_PAYMENT_REQUIRED"
+        >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field name="payment_details" 
+               showon="payment_required:1"
+               cols="50" 
+               rows="4" 
+               filter="safehtml" 
+               type="editor" 
+               label="COM_RA_EVENTBOOKING_FORM_LBL_EVENTSETTING_PAYMENT_DETAILS" 
+               description="COM_RA_EVENTBOOKING_FORM_DESC_EVENTSETTING_PAYMENT_DETAILS" 
+               hint="Description of what payment is required."
+        />
+    </fieldset>
+   
     <fieldset name="communications" description="Communication options" label="Communications">
+        <field 
+            name="booking_contact_id" 
+            type="Bookingcontact" 
+            context="config"
+            label="COM_RA_EVENTBOOKING_FORM_LBL_GROUP_CONTACT" 
+            description="COM_RA_EVENTBOOKING_FORM_DESC_GROUP_CONTACT" 
+        />
+        <field name="closingdate" 
+               type="list"        
+               label="COM_RA_EVENTBOOKING_FORM_LBL_USERLISTCLOSING"
+               description="COM_RA_EVENTBOOKING_FORM_DESC_USERLISTCLOSING">
+            <option value="6pm">6pm on the day before event</option>
+            <option value="24">24 hours prior to start</option>
+            <option value="start">When event starts</option>
+        </field>
         <field name="email_format" 
                type="text" 
                label="COM_RA_EVENTBOOKING_FORM_LBL_GROUP_EMAIL_FORMAT" 
@@ -154,7 +155,6 @@
                label="JCONFIG_PERMISSIONS_LABEL" section="component" 
         />
     </fieldset>
-      
     <fieldset name="component">
         <field
             name="save_history"
