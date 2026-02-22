@@ -1,7 +1,6 @@
 <?php
 
 /*
- * @version    CVS: 1.0.0
  * @package    Com_Ra_eventbooking
  * @author     Chris Vaughan  <ruby.tuesday@ramblers-webs.org.uk>
  * @copyright  2025 Ruby Tuesday
@@ -376,6 +375,7 @@ class Ra_eventbookingHelper {
             throw new \RuntimeException('Unable to up date email with event data: ' . $template);
         }
         $content = $evb->event_data->upDateEmail($content);
+        $content = $evb->updateEmailPaymentText($content);
         return $evb->updateEmailforBookingInfo($content);
     }
 
@@ -489,17 +489,17 @@ class evb {
     public function checkBooking($newBooking) {
         $currentNoAttendees = $this->blc->noAttendees();
         $extraPlaces = $newBooking->noAttendees();
-// check if use has existing booking
+        // check if user has existing booking
         $currentBooking = $this->blc->hasBooking($newBooking->email);
         if ($currentBooking !== null) {
             $extraPlaces = $extraPlaces - $currentBooking->noAttendees();
         }
-//  calc remaining
+        //  calc remaining places
         $totalPlaces = $this->options->total_places;
         If ($totalPlaces === 0) {
             $totalPlaces = PHP_INT_MAX;
         }
-// check booking does not go over max allowed   
+        // check booking does not go over total allowed   
         if ($extraPlaces + $currentNoAttendees > $totalPlaces) {
             throw new \RuntimeException('Not enough spare places to make this booking');
         }
@@ -525,13 +525,12 @@ class evb {
 
     public function getBookingTable() {
         $juser = Factory::getUser();
-        $componentParams = ComponentHelper::getParams('com_ra_eventbooking');
         $canEdit = false;
         if ($juser->id > 0) {
             $canEdit = $juser->authorise('core.edit', 'com_ra_eventbooking');
         }
-        $userlistvisibletousers = $componentParams->get('userlistvisibletousers') === "1";
-        $userlistvisibletoguests = $componentParams->get('userlistvisibletoguests') === "1";
+        $userlistvisibletousers = $this->options->userlistvisibletousers;
+        $userlistvisibletoguests = $this->options->userlistvisibletoguests;
         $canView = false;
         if ($canEdit) {
             $canView = true;
@@ -543,7 +542,7 @@ class evb {
             $canView = true;
         }
         if ($canView) {
-            return $this->blc->getBookingTable($this->payment_required, $canEdit);
+            return $this->blc->getBookingTable($this->options->payment_required, $canEdit);
         }
         return '';
     }
@@ -609,6 +608,16 @@ class evb {
         $replace = [$placesAvailable, $placesTaken,
             $totalPlacesAvailable, $noOfPlaces, $signature];
         return str_replace($search, $replace, $content);
+    }
+
+    public function updateEmailPaymentText($content) {
+        if ($this->options->payment_required) {
+            $out = "<p>Please note that a payment is required for this event and your booking is not valid unless you follow the instructions below</p>";
+            $out .= $this->options->payment_details;
+            return str_replace('{payment}', $out, $content);
+        } else {
+            return $content;
+        }
     }
 
     public function updateDatabase($which) {
@@ -1056,7 +1065,7 @@ class eventData implements \JsonSerializable {
         $date = new \DateTime($this->date);
         $walkDate = $date->format("D, jS M Y");
         $cancelButton = "<a href='{cancelUrl}' style='border-radius: 5px; background-color:  #F08050; color: white;padding: 3px;margin:3px;'>CANCEL Booking</a>";
-        $viewButton = "<a href='{" . $this->localPopupUrl . "}' style='border-radius: 5px; background-color:  #9BC8AB; color: white;padding: 3px 3px;margin:3px;'>View Event</a>";
+        $viewButton = "<a href='" . $this->localPopupUrl . "' style='border-radius: 5px; background-color:  #9BC8AB; color: white;padding: 3px 3px;margin:3px;'>View Event</a>";
 
         $swap = ["{groupName}" => $this->groupName,
             "{eventId}" => $this->id,

@@ -61,7 +61,7 @@
     <fields name="params">  <!-- This becomes JSON automatically -->
         <fieldset name="params" label="Options">
             <field name="total_places" 
-                   first="0" last="10" step="1" type="integer" 
+                   first="0" last="200" step="1" type="integer" 
                    useglobal="true" 
                    label="Total number of Places" 
                    description="Total or maximum number of places or zero if unlimited places" 

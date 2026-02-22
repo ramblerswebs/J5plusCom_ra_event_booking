@@ -56,7 +56,7 @@ ra.bookings.queryServer = function (self, action) {
             this.url = "index.php?option=com_ra_eventbooking&view=adminemailallbook&format=json";
             break;
         case 'Adminemailsinglebooking':
-            this.progressMsg = 'Sending email ...1';
+            this.progressMsg = 'Sending email ...';
             this.url = "index.php?option=com_ra_eventbooking&view=adminemailsinglebook&format=json";
             break;
         case 'AdminDeleteSingleBooking':
@@ -68,7 +68,7 @@ ra.bookings.queryServer = function (self, action) {
             this.url = "index.php?option=com_ra_eventbooking&view=adminemailallwait&format=json";
             break;
         case 'AdminEmailSingleWaiting':
-            this.progressMsg = 'Sending email ...2';
+            this.progressMsg = 'Sending email ...';
             this.url = "index.php?option=com_ra_eventbooking&view=adminemailsinglewait&format=json";
             break;
         case 'AdminDeleteSingleWaiting':
@@ -80,18 +80,18 @@ ra.bookings.queryServer = function (self, action) {
             this.url = "index.php?option=com_ra_eventbooking&view=adminchangepaid&format=json";
             break;
         case'AdminEmailBookingList':
-            this.progressMsg = 'Sending emails ...3';
+            this.progressMsg = 'Sending emails to booking list ...';
             this.url = "index.php?option=com_ra_eventbooking&view=adminemailbookinglist&format=json";
             break;
         case 'VerifyEmail':
-            this.progressMsg = 'Sending email ...4';
+            this.progressMsg = 'Sending verification email ...';
             this.url = "index.php?option=com_ra_eventbooking&view=verifyemail&format=json";
             break;
         case 'NotifyListEmail':
             this.url = "index.php?option=com_ra_eventbooking&view=notifylistemail&format=json";
             break;
         case 'emailBookingContact':
-            this.progressMsg = 'Sending email ...6';
+            this.progressMsg = 'Sending email to booking contact';
             this.url = "index.php?option=com_ra_eventbooking&view=emailbookingcontact&format=json";
             break;
         default:
@@ -104,7 +104,7 @@ ra.bookings.queryServer = function (self, action) {
         if (this.progressMsg !== null) {
             this.serverProgressModal = this.displayProgress(this.progressMsg);
             this.serverProgressModal.hideClose();
-        } // if progressMsg is null then action is silent and not feedback parameter is expected
+        } // if progressMsg is null then action is silent and no feedback parameter is expected
 
         if (dataObj === null) {
             dataObj = {noInput: true};
@@ -123,10 +123,10 @@ ra.bookings.queryServer = function (self, action) {
                         _this.displayFeedback(response.data.feedback);
                         fcn(self, response);
                     } else {
-                        ra.showMsg('Whoops - something went wrong [' + action + ']: ' + response.message);
+                        _this.displayFeedbackErr('Whoops - something went wrong [' + action + ']: ' + response.message);
                     }
                 } catch (er) {
-                    ra.showMsg('Invalid reply from server, if this continues please contact us');
+                    _this.displayFeedbackErr('Invalid reply from server, if this continues please contact us');
                 }
             }
         };
@@ -168,7 +168,6 @@ ra.bookings.queryServer = function (self, action) {
             return;
         }
         // array
-
         feedback.forEach(item => {
             console.log('feedback' + item);
             var div1 = document.createElement("div");
@@ -177,6 +176,14 @@ ra.bookings.queryServer = function (self, action) {
             this.serverProgressModal.resetContent(div1);
         });
 
+    };
+    this.displayFeedbackErr = function (feedback) {
+        if (this.serverProgressModal === null) {
+            ra.showMsg(feedback);
+            return;
+        }
+        this.serverProgressModal.showClose();
+        this.serverProgressModal.resetContent(feedback);
     };
 };
 

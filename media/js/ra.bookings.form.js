@@ -87,9 +87,9 @@ ra.bookings.formBooking = function (user, ewid, ew, evb, ics, closing) {
         tag.appendChild(ele);
         var help = document.createElement("span");
         help.style.paddingRight = '10px';
-        help.innerHTML = 'Need help? Email the booking contact';
+        help.innerHTML = 'Need help? Email the booking contact (' + this.evb.options.booking_contact_name + ')';
         ele.appendChild(help);
-        ra.bookings.displayEmailIcon(ele, 'Need help? Email the booking contact', tag, "emailContact", {user: self});
+        ra.bookings.displayEmailIcon(ele, help.innerHTML, tag, "emailContact", {user: self});
         var self = this;
         tag.addEventListener('emailContact', (e) => {
             var options = {
@@ -348,7 +348,7 @@ ra.bookings.formBooking = function (user, ewid, ew, evb, ics, closing) {
             }
         });
         tag.addEventListener('deleteBooker', (e) => {
-            if (ra.showConfirm('Confirm you wish to delete this booking')) {
+            if (ra.showConfirm('Confirm you wish to delete this booking (NO EMAIL IS SENT TO USER)')) {
                 self.deleteBooker(e.raData);
             }
         });
@@ -377,7 +377,7 @@ ra.bookings.formBooking = function (user, ewid, ew, evb, ics, closing) {
             self.emailForm(options);
         });
         tag.addEventListener('deleteWaiting', (e) => {
-            if (ra.showConfirm('Confirm you wish to delete this person from waiting list')) {
+            if (ra.showConfirm('Confirm you wish to delete this person from waiting list(NO EMAIL IS SENT TO USER)')) {
                 self.deleteWaiting(e.raData);
             }
         });
@@ -448,6 +448,10 @@ ra.bookings.formBooking = function (user, ewid, ew, evb, ics, closing) {
             case BookingStatus.NONE:
                 this.displayStatus(tag);
                 break;
+            case BookingStatus.INVALIDLOGON:
+            case BookingStatus.INVALIDLOGOFF:
+                this.displayStatus(tag);
+                return;
             default:
                 return;
         }
